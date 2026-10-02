@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-bg: #0e0f0c;
+  --color-surface: #181a16;
+  --color-surface-2: #22251f;
+  --color-fg: #eceae3;
+  --color-muted: #8d9086;
+  --color-faint: #5c5f57;
+  --color-border: rgb(236 234 227 / 0.1);
+  --color-sage: #b7c4b0;
+  --color-sage-fg: #0e0f0c;
+  --color-prime: #c5d6b8;
+  --color-prime-bg: rgb(183 196 176 / 0.14);
+  --color-composite: #7a746c;
+  --color-background: #0e0f0c;
+  --color-foreground: #eceae3;
+  --color-primary: #b7c4b0;
+  --color-primary-foreground: #0e0f0c;
+  --color-card: #181a16;
+  --color-card-foreground: #eceae3;
+  --color-secondary: #22251f;
+  --color-secondary-foreground: #eceae3;
+  --color-accent: #22251f;
+  --color-accent-foreground: #eceae3;
+  --color-ring: #b7c4b0;
+  --color-destructive: #c45c3e;
+  --color-input: #22251f;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  --shadow-border: 0 0 0 1px rgb(236 234 227 / 0.08);
+  --shadow-border-hover: 0 0 0 1px rgb(236 234 227 / 0.16);
+
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100%;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-image: linear-gradient(180deg, #13150f 0%, #0e0f0c 42%);
+    background-attachment: fixed;
+  }
+
+  summary {
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.num-cell {
+  position: relative;
+  display: flex;
+  min-height: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  box-shadow: var(--shadow-border);
+  transition-property: color, background-color, box-shadow, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.num-cell:hover {
+  color: var(--color-fg);
+  box-shadow: var(--shadow-border-hover);
+}
+
+.num-cell:focus-visible {
+  z-index: 2;
+  outline: 2px solid var(--color-sage);
+  outline-offset: 1px;
+}
+
+.num-cell[data-one="true"] {
+  color: var(--color-faint);
+  background: color-mix(in oklab, var(--color-surface) 70%, transparent);
+}
+
+.num-cell[data-status="prime"] {
+  background: var(--color-prime-bg);
+  color: var(--color-prime);
+  font-weight: 500;
+}
+
+.num-cell[data-status="composite"] {
+  color: var(--color-composite);
+}
+
+.num-cell[data-status="composite"] .num-cell-value::after {
+  position: absolute;
+  top: 50%;
+  left: -12%;
+  width: 124%;
+  height: 1px;
+  background: color-mix(in oklab, var(--color-composite) 85%, transparent);
+  content: "";
+  transform: rotate(-22deg);
+}
+
+.num-cell[data-current="true"] {
+  z-index: 1;
+  color: var(--color-fg);
+  box-shadow: 0 0 0 1px var(--color-sage);
+}
+
+.num-cell[data-striking="true"] {
+  background: color-mix(in oklab, var(--color-composite) 22%, var(--color-surface));
+  color: var(--color-fg);
+}
+
+.num-cell[data-selected="true"] {
+  z-index: 2;
+  box-shadow: 0 0 0 2px var(--color-fg);
+}
+
+.num-cell-value {
+  position: relative;
+}
+
+.prime-chip {
+  display: inline-flex;
+  min-height: 2rem;
+  min-width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--color-prime-bg);
+  color: var(--color-prime);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-border);
+  transition-property: background-color, color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.prime-chip:hover,
+.prime-chip[data-selected="true"] {
+  background: var(--color-sage);
+  color: var(--color-sage-fg);
+  box-shadow: none;
+}
+
+.prime-chip[data-fresh="true"] {
+  animation: chip-in 400ms var(--ease-smooth-out) both;
+}
+
+.sieve-progress {
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.factor-tile {
+  display: inline-flex;
+  min-height: 2.25rem;
+  min-width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-prime-bg);
+  color: var(--color-prime);
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-border);
+  transition-property: background-color, color, scale;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.factor-tile:hover {
+  background: var(--color-sage);
+  color: var(--color-sage-fg);
+}
+
+.factor-tile:active {
+  scale: 0.96;
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (min-width: 640px) {
+  .num-cell {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .num-cell,
+  .prime-chip,
+  .factor-tile,
+  .sieve-progress,
+  button {
+    animation: none;
+    transition-duration: 0.01ms;
+  }
+
+  .prime-chip[data-fresh="true"] {
+    animation: none;
+  }
+}
